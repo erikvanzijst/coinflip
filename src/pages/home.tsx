@@ -38,7 +38,7 @@ export function HomePage() {
     setResult(currentMod === 180 ? "tails" : "heads");
   }, []);
 
-  const label = spinning ? "Flipping…" : result === "heads" ? "Heads" : result === "tails" ? "Tails" : "";
+  const label = result === "heads" ? "Heads" : result === "tails" ? "Tails" : "";
 
   return (
     <section className="flex flex-col items-center gap-10">
