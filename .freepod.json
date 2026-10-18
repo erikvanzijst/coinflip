@@ -1,6 +1,9 @@
 {
   "version": 1,
-  "deployment": null,
+  "deployment": {
+    "id": "a3a5c585-0d5f-4457-b487-9a7d59e8d58b",
+    "name": "custom-user-app-8usa7y"
+  },
   "user_values": {
     "hostname": "coinflip.prutser.freepod.eu"
   }
