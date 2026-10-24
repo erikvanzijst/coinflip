@@ -1,10 +1,11 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 type Side = "heads" | "tails";
 
-// Length of one spin, in milliseconds. Keep in sync with the CSS fallback.
-const SPIN_MS = 3200;
+const HEADS_SRC = "/assets/coin-heads.webp";
+const TAILS_SRC = "/assets/coin-tails.webp";
+const COIN_FACES = [HEADS_SRC, TAILS_SRC];
 
 export function HomePage() {
   const [rotation, setRotation] = useState(0);
@@ -15,8 +16,13 @@ export function HomePage() {
   // one stopped and always finishes on a full turn to the chosen face.
   const rotationRef = useRef(0);
 
+  // In a ref as well as in state: `flip` stays stable, and a click that lands
+  // in the same tick as the end of a spin cannot start a second one.
+  const spinningRef = useRef(false);
+  const autoFlipped = useRef(false);
+
   const flip = useCallback(() => {
-    if (spinning) return;
+    if (spinningRef.current) return;
 
     const side: Side = Math.random() < 0.5 ? "heads" : "tails";
     const current = rotationRef.current;
@@ -26,17 +32,42 @@ export function HomePage() {
     const spins = 5 + Math.floor(Math.random() * 3);
     const next = current + spins * 360 + delta;
 
+    spinningRef.current = true;
     rotationRef.current = next;
     setResult(null);
     setSpinning(true);
     setRotation(next);
-  }, [spinning]);
+  }, []);
 
   const handleLanded = useCallback(() => {
+    spinningRef.current = false;
     setSpinning(false);
     const currentMod = ((rotationRef.current % 360) + 360) % 360;
     setResult(currentMod === 180 ? "tails" : "heads");
   }, []);
+
+  // Toss the coin once on arrival: the flip is the whole app, so nobody should
+  // have to find the button to see it. Waits for both faces to decode — but no
+  // longer than a moment — so the first spin is never a pair of empty images.
+  // The guard keeps it to one toss, including React's double-run in development.
+  useEffect(() => {
+    if (autoFlipped.current) return;
+    autoFlipped.current = true;
+
+    const faces = COIN_FACES.map((src) => {
+      const image = new Image();
+      image.src = src;
+      return image.decode().catch(() => undefined);
+    });
+    const ready = Promise.race([
+      Promise.all(faces),
+      new Promise((resolve) => setTimeout(resolve, 800)),
+    ]);
+
+    // A beat on the resting coin first, so the page does not blur past before
+    // the eye finds it.
+    void ready.then(() => setTimeout(flip, 320));
+  }, [flip]);
 
   const label = result === "heads" ? "Heads" : result === "tails" ? "Tails" : "";
 
@@ -59,13 +90,13 @@ export function HomePage() {
             }}
           >
             <img
-              src="/assets/coin-heads.webp"
+              src={HEADS_SRC}
               alt="Heads: the bust of George Washington on a quarter"
               draggable={false}
               className="coin__face [filter:drop-shadow(0_16px_22px_rgb(0_0_0/0.28))]"
             />
             <img
-              src="/assets/coin-tails.webp"
+              src={TAILS_SRC}
               alt="Tails: the eagle on the reverse of a quarter"
               draggable={false}
               className="coin__face coin__face--back [filter:drop-shadow(0_16px_22px_rgb(0_0_0/0.28))]"
