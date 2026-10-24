@@ -91,13 +91,13 @@ export function HomePage() {
           >
             <img
               src={HEADS_SRC}
-              alt="Heads: the bust of George Washington on a quarter"
+              alt="Heads: the Vitruvian Man on the Italian one euro coin"
               draggable={false}
               className="coin__face [filter:drop-shadow(0_16px_22px_rgb(0_0_0/0.28))]"
             />
             <img
               src={TAILS_SRC}
-              alt="Tails: the eagle on the reverse of a quarter"
+              alt="Tails: the common side of the one euro coin, with the map of Europe"
               draggable={false}
               className="coin__face coin__face--back [filter:drop-shadow(0_16px_22px_rgb(0_0_0/0.28))]"
             />
