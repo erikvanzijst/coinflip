@@ -91,7 +91,7 @@ export function HomePage() {
           >
             <img
               src={HEADS_SRC}
-              alt="Heads: the Vitruvian Man on the Italian one euro coin"
+              alt="Heads: the Slovenian national side of the one euro coin, with the portrait of Primož Trubar"
               draggable={false}
               className="coin__face [filter:drop-shadow(0_16px_22px_rgb(0_0_0/0.28))]"
             />
