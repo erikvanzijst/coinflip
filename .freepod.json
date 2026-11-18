@@ -1,5 +1,7 @@
 {
   "$schema": "https://freepod.eu/api/products/custom/project-schema",
   "version": 2,
-  "deployment": "a3a5c585-0d5f-4457-b487-9a7d59e8d58b"
+  "deployment": "a3a5c585-0d5f-4457-b487-9a7d59e8d58b",
+  "name": "Coin Flip",
+  "icon": "public/assets/coin-tails.webp"
 }
